@@ -1,7 +1,6 @@
 package com.movie.service.impl;
 
 import com.movie.domain.Movie;
-import com.movie.dto.UserDTO;
 import com.movie.repository.MovieRepository;
 import com.movie.service.MovieService;
 import com.movie.service.exception.BusinessException;
@@ -16,7 +15,7 @@ import static java.util.Optional.ofNullable;
 
 @Service
 public class MovieServiceImpl implements MovieService {
-    private static final Long UNCHANGEABLE_USER_ID = 1L;
+    private static final Long UNCHANGEABLE_MOVIE_ID = 1L;
 
     @Autowired
     private MovieRepository movieRepository;
@@ -33,7 +32,7 @@ public class MovieServiceImpl implements MovieService {
 
     @Transactional
     public Movie create(Movie movieToCreate) {
-        ofNullable(movieToCreate).orElseThrow(() -> new BusinessException("User to create must not be null."));
+        ofNullable(movieToCreate).orElseThrow(() -> new BusinessException("Movie to create must not be null."));
 
         this.validateChangeableId(movieToCreate.getId(), "created");
         return this.movieRepository.save(movieToCreate);
@@ -62,10 +61,9 @@ public class MovieServiceImpl implements MovieService {
     }
 
     private void validateChangeableId(Long id, String operation) {
-        if (UNCHANGEABLE_USER_ID.equals(id)) {
-            throw new BusinessException("User with ID %d can not be %s.".formatted(UNCHANGEABLE_USER_ID, operation));
+        if (UNCHANGEABLE_MOVIE_ID.equals(id)) {
+            throw new BusinessException("Movie with ID %d can not be %s.".formatted(UNCHANGEABLE_MOVIE_ID, operation));
         }
     }
-
 
 }
