@@ -2,6 +2,7 @@ package com.movie.dto;
 
 public class ScoreDTO {
 
+    private Long userId;
     private Long movieId;
     private String email;
     private Double score;
@@ -9,12 +10,16 @@ public class ScoreDTO {
     public ScoreDTO() {
     }
 
-    public Long getMovieId() {
-        return movieId;
+    public Long getUserId() {
+        return userId;
     }
 
-    public void setMovieId(Long movieId) {
-        this.movieId = movieId;
+    public void setUserId(Long userId) {
+        this.userId = userId;
+    }
+
+    public Long getMovieId() {
+        return movieId;
     }
 
     public String getEmail() {

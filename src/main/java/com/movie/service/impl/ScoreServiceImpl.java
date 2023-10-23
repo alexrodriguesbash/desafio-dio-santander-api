@@ -18,7 +18,6 @@ import java.util.NoSuchElementException;
 
 @Service
 public class ScoreServiceImpl implements ScoreService {
-    private static final Long UNCHANGEABLE_MOVIE_ID = 1L;
 
     @Autowired
     private MovieRepository movieRepository;
@@ -33,21 +32,25 @@ public class ScoreServiceImpl implements ScoreService {
     public MovieDTO saveScore(ScoreDTO dto) {
 
         User user = userRepository.findByEmail(dto.getEmail());
-        if (user == null) {
-            user = new User();
+
+        if (user != null){
             user.setEmail(dto.getEmail());
-            user = userRepository.saveAndFlush(user);
+        }else{
+            throw new BusinessException("The email does not correspond to any registered user");
         }
 
-        this.validateChangeableId(dto.getMovieId(), "score");
-
         Movie movie = movieRepository.findById(dto.getMovieId())
-                .orElseThrow(() -> new NoSuchElementException("Movie not found"));
+                .orElseThrow(() -> new BusinessException(String.format("You cannot assign a score because the movie with ID %d does not exist", dto.getMovieId())));
 
         Score score = new Score();
         score.setMovie(movie);
         score.setUser(user);
-        score.setValue(dto.getScore());
+
+        if(dto.getScore() < 0){
+            score.setValue(dto.getScore());
+        }else{
+            throw new BusinessException("Score cannot be less than 0");
+        }
 
         score = scoreRepository.saveAndFlush(score);
 
@@ -64,12 +67,6 @@ public class ScoreServiceImpl implements ScoreService {
         movie = movieRepository.save(movie);
 
         return new MovieDTO(movie);
-    }
-
-    private void validateChangeableId(Long id, String operation) {
-        if (UNCHANGEABLE_MOVIE_ID.equals(id)) {
-            throw new BusinessException("Movie with ID %d cannot be %s because it does not exist".formatted(UNCHANGEABLE_MOVIE_ID, operation));
-        }
     }
 
 }
