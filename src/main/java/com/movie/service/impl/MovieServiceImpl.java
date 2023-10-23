@@ -3,6 +3,7 @@ package com.movie.service.impl;
 import com.movie.domain.Movie;
 import com.movie.repository.MovieRepository;
 import com.movie.service.MovieService;
+import com.movie.service.ScoreService;
 import com.movie.service.exception.BusinessException;
 import com.movie.service.exception.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
